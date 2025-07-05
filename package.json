@@ -11,18 +11,34 @@
   "dependencies": {
     "@expo/vector-icons": "^14.1.0",
     "@react-native-async-storage/async-storage": "^2.2.0",
+<<<<<<< HEAD
     "@supabase/supabase-js": "^2.50.2",
     "expo": "^53.0.13",
     "expo-auth-session": "~6.2.0",
     "expo-constants": "~17.1.6",
     "expo-font": "~13.3.1",
+=======
+    "@react-native-community/slider": "^4.5.7",
+    "@supabase/supabase-js": "^2.50.2",
+    "expo": "^53.0.13",
+    "expo-auth-session": "~6.2.0",
+    "expo-camera": "^16.1.9",
+    "expo-constants": "~17.1.6",
+    "expo-font": "~13.3.1",
+    "expo-linear-gradient": "^14.1.5",
+>>>>>>> b8289fd400bd88f0ce80399fbb0ab7e8918701b2
     "expo-linking": "~7.1.5",
     "expo-random": "^14.0.1",
     "expo-router": "~5.1.1",
     "expo-status-bar": "~2.2.3",
     "nativewind": "^4.1.23",
+<<<<<<< HEAD
     "react": "^19.0.0",
     "react-native": "^0.79.4",
+=======
+    "react": "19.0.0",
+    "react-native": "0.79.4",
+>>>>>>> b8289fd400bd88f0ce80399fbb0ab7e8918701b2
     "react-native-reanimated": "~3.17.4",
     "react-native-safe-area-context": "^5.4.0",
     "react-native-screens": "~4.11.1"

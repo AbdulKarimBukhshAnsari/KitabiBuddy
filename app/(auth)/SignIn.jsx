@@ -1,12 +1,19 @@
 import { loginUserAccount } from "../../apis/AuthApis/accountLogin";
 import  supabase  from "../../lib/supabase";
+<<<<<<< HEAD
 
+=======
+>>>>>>> b8289fd400bd88f0ce80399fbb0ab7e8918701b2
 import { View, Text, TouchableOpacity, ActivityIndicator } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import LogoComponent from "../../components/AuthComponents/LogoComponent";
 import InputField from "../../components/AuthComponents/InputField";
+<<<<<<< HEAD
+=======
+import CustomAlert from "../../components/BaseComponents/Alert/CustomAlert";
+>>>>>>> b8289fd400bd88f0ce80399fbb0ab7e8918701b2
 
 function SignIn() {
   const [formData, setFormData] = useState({
@@ -15,6 +22,12 @@ function SignIn() {
   });
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+<<<<<<< HEAD
+=======
+  const [alertVisible, setAlertVisible] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alertType, setAlertType] = useState("success");
+>>>>>>> b8289fd400bd88f0ce80399fbb0ab7e8918701b2
 
   const handleChange = (field, value) => {
     setFormData({ ...formData, [field]: value });
@@ -50,6 +63,7 @@ function SignIn() {
     return isValid;
   };
 
+<<<<<<< HEAD
   // const handleSignIn = () => {
   //   if (validateForm()) {
   //     setIsLoading(true);
@@ -90,6 +104,13 @@ function SignIn() {
   //     }
   //   }
   // };
+=======
+  const showAlert = (message, type = "success") => {
+    setAlertMessage(message);
+    setAlertType(type);
+    setAlertVisible(true);
+  };
+>>>>>>> b8289fd400bd88f0ce80399fbb0ab7e8918701b2
 
   const handleSignIn = async () => {
     if (validateForm()) {
@@ -103,12 +124,17 @@ function SignIn() {
       setIsLoading(false);
 
       if (error) {
+<<<<<<< HEAD
         alert(error);
+=======
+        showAlert(error, "error");
+>>>>>>> b8289fd400bd88f0ce80399fbb0ab7e8918701b2
       } else {
         const { data: sessionData, error: sessionError } =
           await supabase.auth.getSession();
 
         if (sessionError) {
+<<<<<<< HEAD
           alert("Login successful, but could not verify session.");
         } else if (sessionData?.session) {
           const { user } = sessionData.session;
@@ -120,6 +146,18 @@ function SignIn() {
           router.replace("/Home");
         } else {
           alert("Login successful, but no active session found.");
+=======
+          showAlert("Login successful, but could not verify session.", "error");
+        } else if (sessionData?.session) {
+          const { user } = sessionData.session;
+          showAlert("Login successful!");
+          setTimeout(() => {
+            setAlertVisible(false);
+            router.replace("/Home");
+          }, 1500);
+        } else {
+          showAlert("Login successful, but no active session found.", "error");
+>>>>>>> b8289fd400bd88f0ce80399fbb0ab7e8918701b2
         }
       }
     }
@@ -198,6 +236,16 @@ function SignIn() {
           </TouchableOpacity>
         </View>
       </View>
+<<<<<<< HEAD
+=======
+
+      <CustomAlert
+        visible={alertVisible}
+        message={alertMessage}
+        type={alertType}
+        onClose={() => setAlertVisible(false)}
+      />
+>>>>>>> b8289fd400bd88f0ce80399fbb0ab7e8918701b2
     </SafeAreaView>
   );
 }

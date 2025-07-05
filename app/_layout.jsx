@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 
@@ -6,10 +7,18 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import supabase from "../lib/supabase";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+=======
+
+>>>>>>> b8289fd400bd88f0ce80399fbb0ab7e8918701b2
 
 import { Stack, SplashScreen } from "expo-router";
 import { useFonts } from "expo-font";
 import "../global.css";
+<<<<<<< HEAD
+=======
+import React, { useEffect } from "react";
+import supabase from "../lib/supabase";
+>>>>>>> b8289fd400bd88f0ce80399fbb0ab7e8918701b2
 
 export default function _Layout() {
   SplashScreen.preventAutoHideAsync();
@@ -20,9 +29,12 @@ export default function _Layout() {
     "Poppins-Medium": require("../assets/fonts/Poppins-Medium.ttf"),
   });
 
+<<<<<<< HEAD
   const [onboardingChecked, setOnboardingChecked] = useState(false);
   const router = useRouter();
 
+=======
+>>>>>>> b8289fd400bd88f0ce80399fbb0ab7e8918701b2
   useEffect(() => {
     if (error) throw error;
     if (fontsloaded) {
@@ -33,6 +45,7 @@ export default function _Layout() {
   if (!fontsloaded && !error) {
     return null;
   }
+<<<<<<< HEAD
 
   return (
     <SafeAreaProvider>
@@ -44,4 +57,18 @@ export default function _Layout() {
       </Stack>
     </SafeAreaProvider>
   );
+=======
+  
+  supabase.auth.signOut();
+  return (
+    
+      <Stack>
+        <Stack.Screen name="index" options={{ headerShown: false }} />
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+      </Stack>
+ 
+  );
+  
+>>>>>>> b8289fd400bd88f0ce80399fbb0ab7e8918701b2
 }

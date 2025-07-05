@@ -36,5 +36,8 @@ yarn-error.*
 # typescript
 *.tsbuildinfo
 
+<<<<<<< HEAD
 # env files
+=======
+>>>>>>> b8289fd400bd88f0ce80399fbb0ab7e8918701b2
 .env

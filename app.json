@@ -28,7 +28,20 @@
     },
     "plugins": [
       "expo-router",
+<<<<<<< HEAD
       "expo-font"
+=======
+      "expo-font",
+
+      ["expo-camera",
+      {
+        "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera",
+        "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone",
+        "recordAudioAndroid": true
+      }
+    ]
+      
+>>>>>>> b8289fd400bd88f0ce80399fbb0ab7e8918701b2
     ]
   }
 }
