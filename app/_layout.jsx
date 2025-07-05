@@ -1,9 +1,15 @@
+import { useRouter } from "expo-router";
+import React, { useEffect, useState } from "react";
 
+import { View, ActivityIndicator } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import supabase from "../lib/supabase";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import { Stack, SplashScreen } from "expo-router";
 import { useFonts } from "expo-font";
 import "../global.css";
-import React, { useEffect } from "react";
 
 export default function _Layout() {
   SplashScreen.preventAutoHideAsync();
@@ -13,6 +19,9 @@ export default function _Layout() {
     "Poppins-Regular": require("../assets/fonts/Poppins-Regular.ttf"),
     "Poppins-Medium": require("../assets/fonts/Poppins-Medium.ttf"),
   });
+
+  const [onboardingChecked, setOnboardingChecked] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     if (error) throw error;
@@ -26,13 +35,13 @@ export default function _Layout() {
   }
 
   return (
-    
+    <SafeAreaProvider>
       <Stack>
         <Stack.Screen name="index" options={{ headerShown: false }} />
+        <Stack.Screen name="(tutorial)" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="(auth)" options={{ headerShown: false }} />
       </Stack>
- 
+    </SafeAreaProvider>
   );
-  
 }

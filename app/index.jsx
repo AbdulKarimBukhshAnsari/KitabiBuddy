@@ -1,11 +1,12 @@
-import  supabase  from "../lib/supabase";
-import { ActivityIndicator } from "react-native"; 
+import supabase from "../lib/supabase";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-
+import { ActivityIndicator } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { useState, useEffect } from "react";
 import { View, Text, Image, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -15,8 +16,8 @@ import Animated, {
   withDelay,
   interpolate,
   Easing,
-  runOnJS,
 } from "react-native-reanimated";
+
 import {
   BGBookMain,
   CornerBorderMain,
@@ -30,25 +31,6 @@ const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 export default function Home() {
   const router = useRouter();
-
-  const [checkingSession, setCheckingSession] = useState(true); // 👈 New state
-
-  useEffect(() => {
-    const checkUserSession = async () => {
-      const { data } = await supabase.auth.getSession();
-
-      // If session exists AND email is confirmed, go to /Home
-      if (data?.session && data.session.user?.email_confirmed_at) {
-        router.replace("/Home");
-      } else {
-        setCheckingSession(false); 
-      }
-    };
-
-    checkUserSession();
-  }, []);
-
-
   const [isPressed, setIsPressed] = useState(false);
   const [typedText, setTypedText] = useState("");
   const fullText = "Remembers your books, so you don't have to!!";
@@ -79,13 +61,11 @@ export default function Home() {
 
   // Start animations
   useEffect(() => {
-    // Logo animation
     logoTranslateY.value = withSequence(
       withTiming(0, { duration: 100 }),
       withSpring(-50, { damping: 12 })
     );
 
-    // Title animation
     titleOpacity.value = withDelay(
       600,
       withTiming(1, {
@@ -94,17 +74,14 @@ export default function Home() {
       })
     );
 
-    // Corner bar animation
     cornerBarScale.value = withDelay(
       1000,
       withSpring(1, { damping: 8, stiffness: 100 })
     );
 
-    // Main image animation
     mainImageTranslateY.value = withDelay(1500, withSpring(0, { damping: 12 }));
     mainImageOpacity.value = withDelay(1500, withTiming(1, { duration: 800 }));
 
-    // Button animation
     buttonTranslateY.value = withDelay(2000, withSpring(0, { damping: 12 }));
     buttonOpacity.value = withDelay(2000, withTiming(1, { duration: 500 }));
   }, []);
@@ -134,16 +111,28 @@ export default function Home() {
     opacity: buttonOpacity.value,
   }));
 
+  // Logic moved to Start button
+  const handleStart = async () => {
+    try {
+      const firstLaunch = await AsyncStorage.getItem("first_launch_done");
 
-  if (checkingSession) {
-    return (
-      <SafeAreaView className="flex-1 justify-center items-center bg-backgroundLight">
-        <ActivityIndicator size="large" color="#6D28D9" />
-      </SafeAreaView>
-    );
-  }
+      if (!firstLaunch) {
+        router.replace("/(tutorial)/Story");
+        return;
+      }
 
+      const { data } = await supabase.auth.getSession();
 
+      if (data?.session && data.session.user?.email_confirmed_at) {
+        router.replace("/Home");
+      } else {
+        router.replace("/SignIn");
+      }
+    } catch (err) {
+      console.error("Start logic failed:", err);
+      router.replace("/SignIn");
+    }
+  };
 
   return (
     <SafeAreaView className="bg-backgroundLight h-full items-center px-4">
@@ -153,11 +142,13 @@ export default function Home() {
         resizeMode="contain"
         style={cornerBarStyle}
       />
+
       <Image
         source={BGBookMain}
         className="absolute w-[350px] h-[400px] top-0 left-0 opacity-10"
         resizeMode="contain"
       />
+
       <Animated.View
         className="logo-name items-center gap-10 top-10"
         style={logoStyle}
@@ -182,8 +173,8 @@ export default function Home() {
         style={mainImageStyle}
       />
 
-      <AnimatedPressable 
-        onPress={() => router.push('/SignIn')}
+      <AnimatedPressable
+        onPress={handleStart}
         onPressIn={() => setIsPressed(true)}
         onPressOut={() => setIsPressed(false)}
         className={`w-[80vw] py-5 rounded-xl mt-10 items-center justify-center ${
@@ -215,3 +206,4 @@ export default function Home() {
     </SafeAreaView>
   );
 }
+      

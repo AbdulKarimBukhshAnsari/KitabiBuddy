@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, ActivityIndicator } from "react-native";
+import { View, Text, TouchableOpacity, ActivityIndicator,ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import React, { useState } from "react";
 import { router } from "expo-router";
@@ -129,74 +129,75 @@ function SignUp() {
 
   return (
     <SafeAreaView className="bg-backgroundLight h-full py-16 px-5">
-      
-      <View className="flex flex-row items-center gap-6 justify-center mb-10">
-        <LogoComponent />
-        <Text className="font-pbold text-primary text-3xl tracking-widest">
-          KitabiBuddy
-        </Text>
-      </View>
-
-      <View className="mt-6">
-        <Text className="font-pbold text-2xl text-textPrimary mb-2">
-          Sign Up
-        </Text>
-        <Text className="font-pregular text-textSecondary mb-8">
-          Create an account to get started
-        </Text>
-
-        <InputField
-          label="Username"
-          value={formData.username}
-          onChangeText={(text) => handleChange("username", text)}
-          placeholder="Enter your username"
-          error={errors.username}
-        />
-
-        <InputField
-          label="Email"
-          value={formData.email}
-          onChangeText={(text) => handleChange("email", text)}
-          placeholder="Enter your email"
-          keyboardType="email-address"
-          error={errors.email}
-        />
-
-        <InputField
-          label="Password"
-          value={formData.password}
-          onChangeText={(text) => handleChange("password", text)}
-          placeholder="Enter your password"
-          secureTextEntry={true}
-          error={errors.password}
-        />
-
-        <TouchableOpacity
-          onPress={handleSignUp}
-          disabled={isLoading}
-          className={`rounded-lg py-4 flex-row justify-center items-center mt-6 ${
-            isLoading ? "bg-primary-light" : "bg-primary"
-          }`}
-        >
-          {isLoading ? (
-            <ActivityIndicator color="#FFF7FF" />
-          ) : (
-            <Text className="font-pmedium text-white text-center">Sign Up</Text>
-          )}
-        </TouchableOpacity>
-
-        <View className="flex-row justify-center mt-8">
-          <Text className="font-pregular text-textSecondary">
-            Already have an account?{" "}
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View className="flex flex-row items-center gap-6 justify-center mb-10">
+          <LogoComponent />
+          <Text className="font-pbold text-primary text-3xl tracking-widest">
+            KitabiBuddy
           </Text>
-          <TouchableOpacity onPress={navigateToSignIn}>
-            <Text className="font-pmedium text-primary">Sign In</Text>
-          </TouchableOpacity>
         </View>
-      </View>
+
+        <View className="mt-6">
+          <Text className="font-pbold text-2xl text-textPrimary mb-2">
+            Sign Up
+          </Text>
+          <Text className="font-pregular text-textSecondary mb-8">
+            Create an account to get started
+          </Text>
+
+          <InputField
+            label="Username"
+            value={formData.username}
+            onChangeText={(text) => handleChange("username", text)}
+            placeholder="Enter your username"
+            error={errors.username}
+          />
+
+          <InputField
+            label="Email"
+            value={formData.email}
+            onChangeText={(text) => handleChange("email", text)}
+            placeholder="Enter your email"
+            keyboardType="email-address"
+            error={errors.email}
+          />
+
+          <InputField
+            label="Password"
+            value={formData.password}
+            onChangeText={(text) => handleChange("password", text)}
+            placeholder="Enter your password"
+            secureTextEntry={true}
+            error={errors.password}
+          />
+
+          <TouchableOpacity
+            onPress={handleSignUp}
+            disabled={isLoading}
+            className={`rounded-lg py-4 flex-row justify-center items-center mt-6 ${
+              isLoading ? "bg-primary-light" : "bg-primary"
+            }`}
+          >
+            {isLoading ? (
+              <ActivityIndicator color="#FFF7FF" />
+            ) : (
+              <Text className="font-pmedium text-white text-center">
+                Sign Up
+              </Text>
+            )}
+          </TouchableOpacity>
+
+          <View className="flex-row justify-center mt-8">
+            <Text className="font-pregular text-textSecondary">
+              Already have an account?{" "}
+            </Text>
+            <TouchableOpacity onPress={navigateToSignIn}>
+              <Text className="font-pmedium text-primary">Sign In</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
       </ScrollView>
     </SafeAreaView>
-  
   );
 }
 
