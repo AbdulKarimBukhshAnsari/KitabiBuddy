@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
-import { View, Text, Button, Image } from 'react-native';
+import { View, Text, Button, Image, ActivityIndicator } from 'react-native';
 import { useCameraPermissions } from 'expo-camera';
 import ScanEditor from '../../components/ScanComponents/ScanEditor';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
+import scanBookCover from '../../apis/ScanApis/ScanBookCover';
 
 export default function Scan() {
   const [permission, requestPermission] = useCameraPermissions();
   const [capturedImage, setCapturedImage] = useState(null);
   const [isCameraActive, setIsCameraActive] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -16,7 +18,7 @@ export default function Scan() {
       return () => {
         setIsCameraActive(false);
         handleReset();
-      }
+      };
     }, [])
   );
 
@@ -26,6 +28,21 @@ export default function Scan() {
 
   const handleReset = () => {
     setCapturedImage(null);
+  };
+
+  const handleScan = async () => {
+    setLoading(true);
+    try {
+      const result = await scanBookCover(capturedImage);
+      console.log(result);
+      // Handle the result here (e.g., navigate to results screen)
+    } catch (error) {
+      console.error('Scan error:', error);
+      // Handle error (e.g., show error message)
+    } finally {
+      setLoading(false);
+      setCapturedImage(null);
+    }
   };
 
   if (!permission) {
@@ -49,12 +66,24 @@ export default function Scan() {
     );
   }
 
+  if (loading) {
+    return (
+      <View className="flex-1 justify-center items-center bg-backgroundLight">
+        <ActivityIndicator size="large" color="#0000ff" />
+        <Text className="text-textPrimary font-pmedium mt-4">
+          Scanning book cover...
+        </Text>
+      </View>
+    );
+  }
+
   if (capturedImage && isCameraActive) {
     return (
       <View className="flex-1 mb-28">
         <Image source={{ uri: capturedImage.uri }} className="flex-1" />
-        <View className="p-4 bg-backgroundLight">
-          <Button title="Take Another Photo" onPress={handleReset} />
+        <View className="p-4 bg-backgroundLight flex-row justify-between">
+          <Button title="Cancel" onPress={handleReset} />
+          <Button title="Scan" onPress={handleScan} />
         </View>
       </View>
     );

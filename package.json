@@ -13,6 +13,7 @@
     "@react-native-async-storage/async-storage": "^2.2.0",
     "@react-native-community/slider": "^4.5.7",
     "@supabase/supabase-js": "^2.50.2",
+    "axios": "^1.10.0",
     "expo": "^53.0.13",
     "expo-auth-session": "~6.2.0",
     "expo-camera": "^16.1.9",
