@@ -1,13 +1,3 @@
-<<<<<<< HEAD
-import { View, Text } from 'react-native'
-import React from 'react'
-import { SafeAreaView } from 'react-native-safe-area-context'
-
-function Whishlist(){
-  return (
-    <SafeAreaView>
-      <Text>Whishlist</Text>
-=======
 import { View, Text, FlatList, TouchableOpacity } from 'react-native'
 import React, { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -93,7 +83,6 @@ function Whishlist() {
       ) : (
         renderEmptyWishlist()
       )}
->>>>>>> b8289fd400bd88f0ce80399fbb0ab7e8918701b2
     </SafeAreaView>
   )
 }
