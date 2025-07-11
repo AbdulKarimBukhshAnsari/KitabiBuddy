@@ -10,7 +10,7 @@ const ZoomControl = React.memo(function ZoomControl({
 }) {
 
   const lastUpdateTime = useRef(0);
-  const throttleDelay = 500;
+  const throttleDelay = 200;
 
   const handleValueChange = useCallback((value) => {
     const now = Date.now();
