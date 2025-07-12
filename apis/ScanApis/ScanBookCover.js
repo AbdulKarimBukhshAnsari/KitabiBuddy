@@ -1,5 +1,5 @@
 const scanBookCover = async (imageFile) => {
-  const API_URL = `http://192.168.0.108:8000/api/book/scan`;
+  const API_URL = `http://192.168.0.107:8000/api/book/scan`;
   console.log("Sending image:", imageFile);
 
   const formData = new FormData();
@@ -12,25 +12,23 @@ const scanBookCover = async (imageFile) => {
   try {
     const response = await fetch(API_URL, {
       method: "POST",
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
+      // headers: {
+      //   "Content-Type": "multipart/form-data",
+      // },
       body: formData,
     });
 
-    const text = await response.text();  // get raw response as text
-    console.log("Raw response text:", text);
-
-    // Try to parse JSON safely
     let data;
     try {
-      data = JSON.parse(text);
+      data = await response.json();
+      console.log("Parsed response:", data);
     } catch (jsonErr) {
       console.error("Failed to parse JSON:", jsonErr);
+      const rawText = await response.text();
       return {
         success: false,
         error: "Invalid JSON response",
-        details: text,
+        details: rawText,
         statusCode: response.status,
       };
     }

@@ -29,6 +29,7 @@ export default function Scan() {
       const fileName = photo.uri.split("/").pop();
       const newUri = FileSystem.documentDirectory + fileName;
 
+      // storing into local URL so that it can be accessed by Expo
       await FileSystem.copyAsync({
         from: photo.uri,
         to: newUri,
@@ -40,7 +41,8 @@ export default function Scan() {
       });
     } catch (err) {
       console.error("Failed to move image to permanent storage:", err);
-      setCapturedImage(photo); // fallback (may fail upload)
+      // Fallback condition
+      setCapturedImage(photo);
     }
   };
 
@@ -62,12 +64,10 @@ export default function Scan() {
 
     try {
       const result = await scanBookCover(imageFile);
-      console.log(result);
-     
+      console.log(result?.data?.author);
     } catch (error) {
       console.error("Scan error:", error);
     } finally {
-     
       try {
         await FileSystem.deleteAsync(capturedImage.uri, { idempotent: true });
         console.log("Temp image deleted:", capturedImage.uri);
@@ -101,17 +101,6 @@ export default function Scan() {
     );
   }
 
-  if (loading) {
-    return (
-      <View className="flex-1 justify-center items-center bg-backgroundLight">
-        <ActivityIndicator size="large" color="#0000ff" />
-        <Text className="text-textPrimary font-pmedium mt-4">
-          Scanning book cover...
-        </Text>
-      </View>
-    );
-  }
-
   if (capturedImage && isCameraActive) {
     return (
       <View className="flex-1 mb-28">
@@ -120,6 +109,18 @@ export default function Scan() {
           <Button title="Cancel" onPress={handleReset} />
           <Button title="Scan" onPress={handleScan} />
         </View>
+
+        {loading && (
+          <View className="absolute top-0 left-0 right-0 bottom-0 bg-black/60 justify-center items-center">
+            <View className="bg-white px-6 py-4 rounded-xl items-center">
+              <ActivityIndicator size = "large" color="#1E3A8A" />
+              {/* Blue-800 */}
+              <Text className="text-black font-pmedium mt-3 text-base">
+                Scanning book cover...
+              </Text>
+            </View>
+          </View>
+        )}
       </View>
     );
   }
