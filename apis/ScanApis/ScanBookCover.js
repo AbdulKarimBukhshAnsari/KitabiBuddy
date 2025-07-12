@@ -1,63 +1,62 @@
-import axios from "axios";
-
-
 const scanBookCover = async (imageFile) => {
+  const API_URL = `http://192.168.0.108:8000/api/book/scan`;
+  console.log("Sending image:", imageFile);
 
-  const API_URL = `https://ac69186f1a37.ngrok-free.app/api/book/scan`;
-  console.log(API_URL);
+  const formData = new FormData();
+  formData.append("file", {
+    uri: imageFile.uri,
+    name: imageFile.name || "photo.jpg",
+    type: imageFile.type || "image/jpeg",
+  });
+
   try {
-    const formData = new FormData();
-    formData.append("file", imageFile);
-
-    const response = await axios.post(API_URL, formData, {
+    const response = await fetch(API_URL, {
+      method: "POST",
       headers: {
         "Content-Type": "multipart/form-data",
       },
-      timeout: 30000, // 30 seconds timeout
+      body: formData,
     });
 
-    if (response.data.success) {
+    const text = await response.text();  // get raw response as text
+    console.log("Raw response text:", text);
+
+    // Try to parse JSON safely
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch (jsonErr) {
+      console.error("Failed to parse JSON:", jsonErr);
       return {
-        success: true,
-        data: response.data.data,
-        processingTime: response.data.data.total_processing_time_ms,
+        success: false,
+        error: "Invalid JSON response",
+        details: text,
+        statusCode: response.status,
       };
     }
 
-    return {
-      success: false,
-      error: response.data.error || "Unknown error",
-      details: response.data.details || "No additional details provided",
-      statusCode: response.status,
-    };
-  } catch (error) {
-    console.log(error);
-    if (error.response) {
-      // The request was made and the server responded with a status code
-      // that falls out of the range of 2xx
+    if (response.ok && data.success) {
       return {
-        success: false,
-        error: error.response.data.error || "API Error",
-        details: error.response.data.details || error.message,
-        statusCode: error.response.status,
-      };
-    } else if (error.request) {
-      // The request was made but no response was received
-      return {
-        success: false,
-        error: "Network Error",
-        details: "No response received from server",
-        statusCode: 0,
+        success: true,
+        data: data.data,
+        processingTime: data.data.total_processing_time_ms,
       };
     } else {
-      // Something happened in setting up the request that triggered an Error
       return {
         success: false,
-        error: "Request Error",
-        details: error.message,
-        statusCode: 0,
+        error: data.error || "Unknown error",
+        details: data.details || "No additional details provided",
+        statusCode: response.status,
       };
     }
+  } catch (error) {
+    console.log("Fetch Error:", error);
+    return {
+      success: false,
+      error: "Network Error",
+      details: error.message || "No response received from server",
+      statusCode: 0,
+    };
   }
 };
 

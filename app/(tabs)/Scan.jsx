@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
-import { View, Text, Button, Image, ActivityIndicator } from 'react-native';
-import { useCameraPermissions } from 'expo-camera';
-import ScanEditor from '../../components/ScanComponents/ScanEditor';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useFocusEffect } from '@react-navigation/native';
-import scanBookCover from '../../apis/ScanApis/ScanBookCover';
+import React, { useState } from "react";
+import mime from "mime";
+import * as FileSystem from "expo-file-system";
+import { View, Text, Button, Image, ActivityIndicator } from "react-native";
+import { useCameraPermissions } from "expo-camera";
+import ScanEditor from "../../components/ScanComponents/ScanEditor";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useFocusEffect } from "@react-navigation/native";
+import scanBookCover from "../../apis/ScanApis/ScanBookCover";
 
 export default function Scan() {
   const [permission, requestPermission] = useCameraPermissions();
@@ -22,8 +24,24 @@ export default function Scan() {
     }, [])
   );
 
-  const handleCapture = (photo) => {
-    setCapturedImage(photo);
+  const handleCapture = async (photo) => {
+    try {
+      const fileName = photo.uri.split("/").pop();
+      const newUri = FileSystem.documentDirectory + fileName;
+
+      await FileSystem.copyAsync({
+        from: photo.uri,
+        to: newUri,
+      });
+
+      setCapturedImage({
+        ...photo,
+        uri: newUri,
+      });
+    } catch (err) {
+      console.error("Failed to move image to permanent storage:", err);
+      setCapturedImage(photo); // fallback (may fail upload)
+    }
   };
 
   const handleReset = () => {
@@ -31,15 +49,32 @@ export default function Scan() {
   };
 
   const handleScan = async () => {
+    if (!capturedImage) return;
+
     setLoading(true);
+    const mimeType = mime.getType(capturedImage.uri);
+
+    const imageFile = {
+      uri: capturedImage.uri,
+      name: capturedImage.uri.split("/").pop(),
+      type: mimeType || "image/jpeg",
+    };
+
     try {
-      const result = await scanBookCover(capturedImage);
+      const result = await scanBookCover(imageFile);
       console.log(result);
-      // Handle the result here (e.g., navigate to results screen)
+     
     } catch (error) {
-      console.error('Scan error:', error);
-      // Handle error (e.g., show error message)
+      console.error("Scan error:", error);
     } finally {
+     
+      try {
+        await FileSystem.deleteAsync(capturedImage.uri, { idempotent: true });
+        console.log("Temp image deleted:", capturedImage.uri);
+      } catch (deleteError) {
+        console.warn("Failed to delete image:", deleteError);
+      }
+
       setLoading(false);
       setCapturedImage(null);
     }
