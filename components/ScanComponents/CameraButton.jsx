@@ -2,18 +2,7 @@ import React from 'react';
 import { TouchableOpacity, Text, View } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 
-/**
- * A reusable button component for camera controls
- * 
- * @param {Object} props - Component props
- * @param {Function} props.onPress - Function to call when button is pressed
- * @param {string} props.icon - Name of the MaterialIcons icon to display
- * @param {string} props.label - Optional text label to display
- * @param {string} props.type - Button type: 'control', 'capture', or 'action'
- * @param {boolean} props.disabled - Whether the button is disabled
- * @param {string} props.position - CSS position classes (e.g., 'top-5 right-5')
- */
-const CameraButton = ({ 
+function CameraButton({ 
   onPress, 
   icon, 
   label, 
@@ -21,7 +10,7 @@ const CameraButton = ({
   disabled = false,
   position = '',
   iconColor = '#FFF7FF'
-}) => {
+}){
   // Button styles based on type
   const getButtonStyle = () => {
     switch(type) {
